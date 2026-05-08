@@ -1,0 +1,2 @@
+GCR object includes usage_metada property that has prompt_token_count (shows the number of tokens in the prompt that was sent to the model)
+and candidates_token_count - shows the number of tokens in the model's response
