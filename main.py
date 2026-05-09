@@ -7,7 +7,9 @@ from google.genai import types
 def main():
     parser = argparse.ArgumentParser(description="Chatbox")
     parser.add_argument("user_prompt", type=str, help="User prompt")
+    parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     args = parser.parse_args()
+
     
     
     load_dotenv()
@@ -27,9 +29,11 @@ def main():
     X = response.usage_metadata.prompt_token_count
     Y = response.usage_metadata.candidates_token_count
 
-    print(f"User prompt: {args.user_prompt}\n")
-    print(f"Prompt tokens: {X}")
-    print(f"Response tokens: {Y}\n")
+    if args.verbose == True:
+        print(f"User prompt: {args.user_prompt}\n")
+        print(f"Prompt tokens: {X}")
+        print(f"Response tokens: {Y}\n")
+    
     print("Response:")
     print(response.text)
 
