@@ -2,6 +2,7 @@ import os
 import argparse
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 
 def main():
     parser = argparse.ArgumentParser(description="Chatbox")
@@ -17,9 +18,8 @@ def main():
 
     client = genai.Client(api_key=api_key)
 
-    model = "gemini-2.5-flash"
-    contents = args.user_prompt
-    response = client.models.generate_content(model=model, contents=contents)
+    messages = [types.Content(role="user", parts=[types.Part(text=args.user_prompt)])]
+    response = client.models.generate_content(model="gemini-2.5-flash", contents=messages)
 
     if response.usage_metadata is None:
         raise RuntimeError("Gemini API response appears to be malformed")
@@ -27,7 +27,7 @@ def main():
     X = response.usage_metadata.prompt_token_count
     Y = response.usage_metadata.candidates_token_count
 
-    print(f"User prompt: {contents}\n")
+    print(f"User prompt: {args.user_prompt}\n")
     print(f"Prompt tokens: {X}")
     print(f"Response tokens: {Y}\n")
     print("Response:")
