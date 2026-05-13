@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 from prompts import system_prompt
+from call_function import available_functions, call_function
 
 def main():
     parser = argparse.ArgumentParser(description="Chatbox")
@@ -11,7 +12,6 @@ def main():
     parser.add_argument("--verbose", action="store_true", help="Enable verbose output")
     args = parser.parse_args()
 
-    
     
     load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
@@ -25,7 +25,7 @@ def main():
     response = client.models.generate_content(
         model="gemini-2.5-flash", 
         contents=messages,
-        config=types.GenerateContentConfig(system_instruction=system_prompt, temperature=0),
+        config=types.GenerateContentConfig(tools=[available_functions], system_instruction=system_prompt, temperature=0),
 
     )
 
@@ -40,8 +40,12 @@ def main():
         print(f"Prompt tokens: {X}")
         print(f"Response tokens: {Y}\n")
     
-    print("Response:")
-    print(response.text)
+    if not response.function_calls:
+        print("Response:")
+        print(response.text)
+        return
+    
+
 
 if __name__ == "__main__":
     main()

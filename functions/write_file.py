@@ -1,5 +1,6 @@
 import os
 from config import MAX_CHARS
+from google.genai import types
 
 def write_file(working_directory, file_path, content):
 
@@ -24,5 +25,28 @@ def write_file(working_directory, file_path, content):
 
      except Exception as e:
         return f"Error: {str(e)}"
+     
+schema_write_file = types.FunctionDeclaration(
+    name="write_file",
+    description="Write or overwrite file from specified file_path with provided content",
+    parameters=types.Schema(
+        type=types.Type.OBJECT,
+        properties={
+            "file_path": types.Schema(
+                type=types.Type.STRING,
+                description="The path to the file to read and get content froms",
+            ),
+
+            "content": types.Schema(
+                type=types.Type.STRING,
+                description="Content to write onto the specified file or to overwrite the file with",
+            ),
+        },
+        required=["file_path", "content"]
+
+    ),
+)
+
+
    
 
